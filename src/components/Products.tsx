@@ -94,7 +94,7 @@ const products: Product[] = [
       "Полезная молочная сыворотка, богатая белками и минералами. Идеальна для питья и приготовления выпечки.",
     price: "30 ₽/л",
     image:
-      "https://images.unsplash.com/photo-1576618148400-f54bed99fcfd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80",
+      "https://cdn.poehali.dev/files/01935df2-7250-4b05-9034-f77e4c629f91.jpg",
     badge: "Эконом",
   },
 ];
