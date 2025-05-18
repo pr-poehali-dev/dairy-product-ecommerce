@@ -7,7 +7,7 @@ const Hero: React.FC = () => {
   const { setOrderFormOpen, setSelectedProduct } = useOrder();
 
   const handleOrderClick = () => {
-    setSelectedProduct("");
+    setSelectedProduct("Натуральная молочная продукция");
     setOrderFormOpen(true);
   };
 
