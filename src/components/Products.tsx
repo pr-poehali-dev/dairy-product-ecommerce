@@ -37,7 +37,7 @@ const products: Product[] = [
       "Густая сметана из свежих сливок. Идеально подходит для заправки салатов и борща.",
     price: "200 ₽/500мл",
     image:
-      "https://images.unsplash.com/photo-1587049633312-d628ae50a8ae?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80",
+      "https://cdn.poehali.dev/files/8a6c3684-06a8-469c-abf8-c92b8fe4ede0.jpg",
   },
   {
     id: 3,
@@ -46,7 +46,7 @@ const products: Product[] = [
       "Диетический творог с пониженным содержанием жира. Идеален для правильного питания.",
     price: "200 ₽/500г",
     image:
-      "https://images.unsplash.com/photo-1551892374-ecf8754cf8b0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80",
+      "https://cdn.poehali.dev/files/71b4f5fd-158d-44aa-af56-012bac6b0fc9.jpg",
     badge: "Для диеты",
   },
   {
@@ -56,7 +56,7 @@ const products: Product[] = [
       "Сытный и питательный творог из цельного молока. Богат кальцием и белком.",
     price: "250 ₽/500г",
     image:
-      "https://images.unsplash.com/photo-1589016025007-ec1c2a4ddccd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80",
+      "https://cdn.poehali.dev/files/71b4f5fd-158d-44aa-af56-012bac6b0fc9.jpg",
   },
   {
     id: 5,
@@ -65,7 +65,7 @@ const products: Product[] = [
       "Натуральный сыр, приготовленный по традиционному рецепту. Выдержка от 2 недель.",
     price: "800 ₽",
     image:
-      "https://images.unsplash.com/photo-1566454825481-43cada551111?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80",
+      "https://cdn.poehali.dev/files/d2112988-6e3f-47f2-a1ce-41dd69bfa09f.jpg",
     badge: "Новинка",
   },
   {
@@ -75,7 +75,7 @@ const products: Product[] = [
       "Натуральные сливки с высоким содержанием жира. Идеальны для кофе и десертов.",
     price: "300 ₽",
     image:
-      "https://images.unsplash.com/photo-1563203369-26f2e4a5ccf7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80",
+      "https://cdn.poehali.dev/files/8a6c3684-06a8-469c-abf8-c92b8fe4ede0.jpg",
   },
 ];
 
