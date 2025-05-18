@@ -126,7 +126,7 @@ const About: React.FC = () => {
               <Card className="relative z-10 overflow-hidden shadow-xl p-3 bg-white">
                 <img
                   src="https://images.unsplash.com/photo-1510610240853-127e698fd505?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=768&q=80"
-                  alt="Наша ферма"
+                  alt="Наше хозяйство"
                   className="rounded-lg h-[400px] w-full object-cover"
                 />
               </Card>
