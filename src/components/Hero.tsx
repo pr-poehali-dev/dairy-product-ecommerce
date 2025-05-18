@@ -61,7 +61,9 @@ const Hero: React.FC = () => {
                 <div className="bg-nature-400 rounded-full p-2 mr-3">
                   <Icon name="Truck" className="h-5 w-5 text-white" />
                 </div>
-                <span className="text-gray-700">Доставка по району</span>
+                <span className="text-gray-700">
+                  Доставка по городу от 500 руб.
+                </span>
               </div>
 
               <div className="flex items-center">
