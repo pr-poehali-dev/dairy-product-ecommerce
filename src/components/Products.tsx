@@ -77,6 +77,16 @@ const products: Product[] = [
     image:
       "https://cdn.poehali.dev/files/8a6c3684-06a8-469c-abf8-c92b8fe4ede0.jpg",
   },
+  {
+    id: 7,
+    name: "Сливочное масло",
+    description:
+      "Натуральное сливочное масло, приготовленное традиционным способом. Высокое содержание полезных жиров.",
+    price: "1100 ₽/кг",
+    image:
+      "https://cdn.poehali.dev/files/0ab5a8ff-e000-4cbc-b3bb-1a4adffb90a2.jpg",
+    badge: "Новинка",
+  },
 ];
 
 const Products: React.FC = () => {
