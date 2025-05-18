@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import {
   Dialog,
@@ -21,7 +20,11 @@ interface OrderFormProps {
   productName?: string;
 }
 
-const OrderForm: React.FC<OrderFormProps> = ({ open, onOpenChange, productName }) => {
+const OrderForm: React.FC<OrderFormProps> = ({
+  open,
+  onOpenChange,
+  productName,
+}) => {
   const { toast } = useToast();
   const [formData, setFormData] = useState({
     name: "",
@@ -32,7 +35,7 @@ const OrderForm: React.FC<OrderFormProps> = ({ open, onOpenChange, productName }
   });
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -40,17 +43,18 @@ const OrderForm: React.FC<OrderFormProps> = ({ open, onOpenChange, productName }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Здесь будет логика отправки данных на сервер
     console.log("Отправка заказа:", formData);
-    
+
     // Показываем уведомление об успешной отправке
     toast({
       title: "Заказ принят!",
-      description: "Мы свяжемся с вами в ближайшее время для подтверждения заказа.",
+      description:
+        "Мы свяжемся с вами в ближайшее время для подтверждения заказа.",
       duration: 5000,
     });
-    
+
     // Закрываем форму и сбрасываем поля
     onOpenChange(false);
     setFormData({
@@ -68,8 +72,8 @@ const OrderForm: React.FC<OrderFormProps> = ({ open, onOpenChange, productName }
         <DialogHeader>
           <DialogTitle>Оформление заказа</DialogTitle>
           <DialogDescription>
-            Заполните форму для заказа молочной продукции. Мы свяжемся с вами для
-            подтверждения.
+            Заполните форму для заказа молочной продукции. Мы свяжемся с вами
+            для подтверждения.
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit}>

@@ -2,9 +2,11 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import Icon from "@/components/ui/icon";
 import { useOrder } from "./OrderContext";
+import { useToast } from "@/hooks/use-toast";
 
 const Contacts: React.FC = () => {
   const { setOrderFormOpen, setSelectedProduct } = useOrder();
+  const { toast } = useToast();
 
   const handleContactFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -15,13 +17,23 @@ const Contacts: React.FC = () => {
     const phone = formData.get("phone") as string;
     const order = formData.get("order") as string;
 
-    // Составляем заказ для модальной формы
-    const orderText = `Заказ из контактной формы: ${order}`;
-    setSelectedProduct(orderText);
-    setOrderFormOpen(true);
+    // Выводим уведомление о принятии заказа
+    toast({
+      title: "Заявка принята!",
+      description:
+        "Мы свяжемся с вами в ближайшее время для подтверждения заказа.",
+      duration: 5000,
+    });
+
+    // Составляем заказ для модальной формы (если нужна дополнительная обработка)
+    // const orderText = `Заказ из контактной формы: ${order}`;
+    // setSelectedProduct(orderText);
+    // setOrderFormOpen(true);
 
     // Сбрасываем форму
     (e.target as HTMLFormElement).reset();
+
+    console.log("Отправка заявки из формы контактов:", { name, phone, order });
   };
 
   return (
