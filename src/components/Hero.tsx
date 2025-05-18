@@ -1,8 +1,16 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import Icon from "@/components/ui/icon";
+import { useOrder } from "./OrderContext";
 
 const Hero: React.FC = () => {
+  const { setOrderFormOpen, setSelectedProduct } = useOrder();
+
+  const handleOrderClick = () => {
+    setSelectedProduct("");
+    setOrderFormOpen(true);
+  };
+
   return (
     <section
       id="home"
@@ -34,7 +42,11 @@ const Hero: React.FC = () => {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-              <Button size="lg" className="bg-milk-500 hover:bg-milk-600">
+              <Button
+                size="lg"
+                className="bg-milk-500 hover:bg-milk-600"
+                onClick={handleOrderClick}
+              >
                 <Icon name="ShoppingCart" className="mr-2 h-5 w-5" />
                 Заказать продукцию
               </Button>

@@ -1,10 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import Icon from "@/components/ui/icon";
+import { useOrder } from "./OrderContext";
 
 const Header: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { setOrderFormOpen, setSelectedProduct } = useOrder();
+
+  const handleOrderClick = () => {
+    setSelectedProduct("");
+    setOrderFormOpen(true);
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -56,7 +63,10 @@ const Header: React.FC = () => {
           >
             Контакты
           </a>
-          <Button className="bg-milk-500 hover:bg-milk-600">
+          <Button
+            className="bg-milk-500 hover:bg-milk-600"
+            onClick={handleOrderClick}
+          >
             <Icon name="Phone" className="mr-2 h-4 w-4" />
             Заказать
           </Button>
@@ -105,7 +115,10 @@ const Header: React.FC = () => {
             >
               Контакты
             </a>
-            <Button className="bg-milk-500 hover:bg-milk-600 w-full">
+            <Button
+              className="bg-milk-500 hover:bg-milk-600 w-full"
+              onClick={handleOrderClick}
+            >
               <Icon name="Phone" className="mr-2 h-4 w-4" />
               Заказать
             </Button>

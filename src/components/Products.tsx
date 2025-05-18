@@ -101,6 +101,12 @@ const products: Product[] = [
 
 const Products: React.FC = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
+  const { setOrderFormOpen, setSelectedProduct } = useOrder();
+
+  const handleOrderClick = (productName: string) => {
+    setSelectedProduct(productName);
+    setOrderFormOpen(true);
+  };
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -171,7 +177,11 @@ const Products: React.FC = () => {
                 <p className="text-lg font-bold text-milk-500">
                   {product.price}
                 </p>
-                <Button size="sm" className="bg-milk-500 hover:bg-milk-600">
+                <Button
+                  size="sm"
+                  className="bg-milk-500 hover:bg-milk-600"
+                  onClick={() => handleOrderClick(product.name)}
+                >
                   <Icon name="ShoppingCart" className="h-4 w-4 mr-1" />
                   Заказать
                 </Button>
