@@ -87,6 +87,16 @@ const products: Product[] = [
       "https://cdn.poehali.dev/files/0ab5a8ff-e000-4cbc-b3bb-1a4adffb90a2.jpg",
     badge: "Новинка",
   },
+  {
+    id: 8,
+    name: "Сыворотка",
+    description:
+      "Полезная молочная сыворотка, богатая белками и минералами. Идеальна для питья и приготовления выпечки.",
+    price: "30 ₽/л",
+    image:
+      "https://images.unsplash.com/photo-1576618148400-f54bed99fcfd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80",
+    badge: "Эконом",
+  },
 ];
 
 const Products: React.FC = () => {
