@@ -13,6 +13,8 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import Icon from "@/components/ui/icon";
 import { useToast } from "@/hooks/use-toast";
+import { useWhatsAppConfig } from "./WhatsAppConfig";
+import { formatOrderMessage, openWhatsApp } from "@/lib/whatsapp";
 
 interface OrderFormProps {
   open: boolean;
@@ -26,6 +28,7 @@ const OrderForm: React.FC<OrderFormProps> = ({
   productName,
 }) => {
   const { toast } = useToast();
+  const { whatsappNumber } = useWhatsAppConfig();
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
@@ -44,8 +47,9 @@ const OrderForm: React.FC<OrderFormProps> = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Здесь будет логика отправки данных на сервер
-    console.log("Отправка заказа:", formData);
+    // Отправляем данные заказа в WhatsApp
+    const message = formatOrderMessage(formData);
+    openWhatsApp(whatsappNumber, message);
 
     // Показываем уведомление об успешной отправке
     toast({
@@ -65,6 +69,13 @@ const OrderForm: React.FC<OrderFormProps> = ({
       product: "",
     });
   };
+
+  // Обновляем product при изменении productName
+  React.useEffect(() => {
+    if (productName) {
+      setFormData((prev) => ({ ...prev, product: productName }));
+    }
+  }, [productName]);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

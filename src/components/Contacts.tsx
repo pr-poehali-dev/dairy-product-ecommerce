@@ -3,10 +3,13 @@ import { Button } from "@/components/ui/button";
 import Icon from "@/components/ui/icon";
 import { useOrder } from "./OrderContext";
 import { useToast } from "@/hooks/use-toast";
+import { useWhatsAppConfig } from "./WhatsAppConfig";
+import { openWhatsApp } from "@/lib/whatsapp";
 
 const Contacts: React.FC = () => {
   const { setOrderFormOpen, setSelectedProduct } = useOrder();
   const { toast } = useToast();
+  const { whatsappNumber } = useWhatsAppConfig();
 
   const handleContactFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -17,6 +20,17 @@ const Contacts: React.FC = () => {
     const phone = formData.get("phone") as string;
     const order = formData.get("order") as string;
 
+    // Формируем сообщение для WhatsApp
+    const message =
+      `🥛 *Новая заявка с сайта!* 🥛\n\n` +
+      `*Имя*: ${name}\n` +
+      `*Телефон*: ${phone}\n` +
+      `*Заказ*: ${order}\n\n` +
+      `Пожалуйста, обработайте заявку как можно скорее.`;
+
+    // Отправляем сообщение в WhatsApp
+    openWhatsApp(whatsappNumber, message);
+
     // Выводим уведомление о принятии заказа
     toast({
       title: "Заявка принята!",
@@ -24,11 +38,6 @@ const Contacts: React.FC = () => {
         "Мы свяжемся с вами в ближайшее время для подтверждения заказа.",
       duration: 5000,
     });
-
-    // Составляем заказ для модальной формы (если нужна дополнительная обработка)
-    // const orderText = `Заказ из контактной формы: ${order}`;
-    // setSelectedProduct(orderText);
-    // setOrderFormOpen(true);
 
     // Сбрасываем форму
     (e.target as HTMLFormElement).reset();
