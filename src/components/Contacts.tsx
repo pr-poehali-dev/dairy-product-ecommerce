@@ -3,33 +3,42 @@ import { Button } from "@/components/ui/button";
 import Icon from "@/components/ui/icon";
 import { useOrder } from "./OrderContext";
 import { useToast } from "@/hooks/use-toast";
-import { useWhatsAppConfig } from "./WhatsAppConfig";
-import { openWhatsApp } from "@/lib/whatsapp";
+import { useEmailConfig } from "./EmailConfig";
 
 const Contacts: React.FC = () => {
   const { setOrderFormOpen, setSelectedProduct } = useOrder();
   const { toast } = useToast();
-  const { whatsappNumber } = useWhatsAppConfig();
+  const { email } = useEmailConfig();
 
   const handleContactFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
+    // Настраиваем FormSubmit
+    const formElement = e.target as HTMLFormElement;
+    formElement.action = `https://formsubmit.co/${email}`;
+    formElement.method = "POST";
+
     // Получаем данные из формы
-    const formData = new FormData(e.target as HTMLFormElement);
+    const formData = new FormData(formElement);
     const name = formData.get("name") as string;
     const phone = formData.get("phone") as string;
     const order = formData.get("order") as string;
 
-    // Формируем сообщение для WhatsApp
-    const message =
-      `🥛 *Новая заявка с сайта!* 🥛\n\n` +
-      `*Имя*: ${name}\n` +
-      `*Телефон*: ${phone}\n` +
-      `*Заказ*: ${order}\n\n` +
-      `Пожалуйста, обработайте заявку как можно скорее.`;
+    // Добавим скрытые поля для FormSubmit
+    const hiddenFields = [
+      { name: "_subject", value: "Новая заявка с сайта" },
+      { name: "_template", value: "table" }, // Хорошее форматирование письма
+      { name: "_captcha", value: "false" }, // Отключаем капчу
+      { name: "_next", value: window.location.href }, // Редирект на текущую страницу после отправки
+    ];
 
-    // Отправляем сообщение в WhatsApp
-    openWhatsApp(whatsappNumber, message);
+    hiddenFields.forEach((field) => {
+      const input = document.createElement("input");
+      input.type = "hidden";
+      input.name = field.name;
+      input.value = field.value;
+      formElement.appendChild(input);
+    });
 
     // Выводим уведомление о принятии заказа
     toast({
@@ -39,8 +48,8 @@ const Contacts: React.FC = () => {
       duration: 5000,
     });
 
-    // Сбрасываем форму
-    (e.target as HTMLFormElement).reset();
+    // Отправляем форму
+    formElement.submit();
 
     console.log("Отправка заявки из формы контактов:", { name, phone, order });
   };

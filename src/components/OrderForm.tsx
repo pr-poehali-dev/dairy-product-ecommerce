@@ -13,8 +13,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import Icon from "@/components/ui/icon";
 import { useToast } from "@/hooks/use-toast";
-import { useWhatsAppConfig } from "./WhatsAppConfig";
-import { formatOrderMessage, openWhatsApp } from "@/lib/whatsapp";
+import { useEmailConfig } from "./EmailConfig";
 
 interface OrderFormProps {
   open: boolean;
@@ -28,7 +27,7 @@ const OrderForm: React.FC<OrderFormProps> = ({
   productName,
 }) => {
   const { toast } = useToast();
-  const { whatsappNumber } = useWhatsAppConfig();
+  const { email } = useEmailConfig();
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
@@ -47,9 +46,28 @@ const OrderForm: React.FC<OrderFormProps> = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Отправляем данные заказа в WhatsApp
-    const message = formatOrderMessage(formData);
-    openWhatsApp(whatsappNumber, message);
+    // FormSubmit автоматически отправит форму на указанный email при первой отправке
+    // При последующих отправках используется тот же адрес
+    const formElement = e.target as HTMLFormElement;
+    const formAction = `https://formsubmit.co/${email}`;
+    formElement.action = formAction;
+    formElement.method = "POST";
+
+    // Добавим скрытые поля для FormSubmit
+    const hiddenFields = [
+      { name: "_subject", value: `Новый заказ: ${formData.product}` },
+      { name: "_template", value: "table" }, // Хорошее форматирование письма
+      { name: "_captcha", value: "false" }, // Отключаем капчу
+      { name: "_next", value: window.location.href }, // Редирект на текущую страницу после отправки
+    ];
+
+    hiddenFields.forEach((field) => {
+      const input = document.createElement("input");
+      input.type = "hidden";
+      input.name = field.name;
+      input.value = field.value;
+      formElement.appendChild(input);
+    });
 
     // Показываем уведомление об успешной отправке
     toast({
@@ -58,6 +76,9 @@ const OrderForm: React.FC<OrderFormProps> = ({
         "Мы свяжемся с вами в ближайшее время для подтверждения заказа.",
       duration: 5000,
     });
+
+    // Отправляем форму
+    formElement.submit();
 
     // Закрываем форму и сбрасываем поля
     onOpenChange(false);
