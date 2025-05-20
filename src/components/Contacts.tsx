@@ -7,6 +7,9 @@ import { useEmailConfig } from "./EmailConfig";
 import { formatOrderMessage, openWhatsApp } from "@/lib/whatsapp";
 import { toast } from "@/hooks/use-toast";
 
+// Константа для Telegram-ссылки
+const TELEGRAM_LINK = "https://t.me/molohka";
+
 export default function Contacts() {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
@@ -19,8 +22,10 @@ export default function Contacts() {
   const { whatsappNumber } = useWhatsAppConfig();
   const { email } = useEmailConfig();
 
-  // Главный контакт для Telegram (Юрий)
-  const telegramContact = contacts.find((contact) => contact.telegram);
+  // Функция для открытия Telegram
+  const openTelegram = () => {
+    window.open(TELEGRAM_LINK, "_blank");
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -67,37 +72,29 @@ export default function Contacts() {
       });
 
       if (response.ok) {
-        // Если email отправлен успешно, открываем Telegram
-        // (если указан, иначе открываем WhatsApp)
-        if (telegramContact?.telegram) {
-          // Открываем Telegram ссылку
-          window.open(telegramContact.telegram, "_blank");
+        // Открываем Telegram
+        openTelegram();
 
-          // Дополнительно показываем инструкцию как отправить заявку в Telegram
-          toast({
-            title: "Заявка подготовлена",
-            description:
-              "Пожалуйста, скопируйте и отправьте текст заявки в открывшемся окне Telegram",
-            duration: 8000,
-          });
-
-          // Копируем текст заявки в буфер обмена
-          navigator.clipboard
-            .writeText(orderMessage)
-            .then(() => {
-              toast({
-                title: "Текст заявки скопирован",
-                description: "Текст заявки скопирован в буфер обмена",
-                duration: 3000,
-              });
-            })
-            .catch((err) => {
-              console.error("Не удалось скопировать текст: ", err);
+        // Копируем текст заявки в буфер обмена
+        navigator.clipboard
+          .writeText(orderMessage)
+          .then(() => {
+            toast({
+              title: "Заявка подготовлена",
+              description:
+                "Текст заявки скопирован. Вставьте его в чат Telegram",
+              duration: 5000,
             });
-        } else {
-          // Если Telegram не указан, открываем WhatsApp
-          openWhatsApp(whatsappNumber, orderMessage);
-        }
+          })
+          .catch((err) => {
+            console.error("Не удалось скопировать текст: ", err);
+            toast({
+              title: "Заявка отправлена",
+              description:
+                "Пожалуйста, отправьте ваш запрос в открывшемся чате Telegram",
+              duration: 5000,
+            });
+          });
 
         // Показываем сообщение об успехе
         setShowSuccess(true);
@@ -130,6 +127,20 @@ export default function Contacts() {
             нами любым удобным способом.
           </p>
           <div className="w-24 h-1 bg-nature-400 mx-auto"></div>
+
+          {/* Добавляем заметную кнопку для связи в Telegram */}
+          <div className="mt-8">
+            <Button
+              onClick={openTelegram}
+              className="bg-[#0088cc] hover:bg-[#0077b5] text-white"
+            >
+              <Icon name="MessageCircle" className="mr-2 h-5 w-5" />
+              Написать в Telegram
+            </Button>
+            <p className="text-sm text-gray-600 mt-2">
+              Мы доступны в Telegram для быстрой связи
+            </p>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
@@ -170,21 +181,43 @@ export default function Contacts() {
                       </p>
                     ) : null,
                   )}
-                  <div className="flex items-center mt-2 space-x-3">
-                    {telegramContact && telegramContact.telegram && (
-                      <a
-                        href={telegramContact.telegram}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-gray-600 hover:text-[#0088cc] transition-colors"
-                      >
-                        <Icon
-                          name="MessageCircle"
-                          className="h-6 w-6"
-                          title="Telegram"
-                        />
-                      </a>
-                    )}
+
+                  {/* Выделенный блок для Telegram */}
+                  <div className="mt-4 p-3 bg-blue-50 rounded-lg border border-blue-100">
+                    <h5 className="font-medium text-blue-800 mb-2">
+                      <Icon
+                        name="MessageCircle"
+                        className="inline-block mr-1 h-4 w-4"
+                      />
+                      Telegram для связи
+                    </h5>
+                    <a
+                      href={TELEGRAM_LINK}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-[#0088cc] hover:text-[#0077b5] font-medium flex items-center"
+                    >
+                      <Icon name="ExternalLink" className="mr-1 h-4 w-4" />
+                      @molohka
+                    </a>
+                    <p className="text-sm text-gray-600 mt-1">
+                      Самый быстрый способ связи
+                    </p>
+                  </div>
+
+                  <div className="flex items-center mt-4 space-x-3">
+                    <a
+                      href={TELEGRAM_LINK}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-gray-600 hover:text-[#0088cc] transition-colors"
+                    >
+                      <Icon
+                        name="MessageCircle"
+                        className="h-6 w-6"
+                        title="Telegram"
+                      />
+                    </a>
                     <a
                       href="#"
                       className="text-gray-600 hover:text-[#4C75A3] transition-colors"
@@ -208,11 +241,6 @@ export default function Contacts() {
                       />
                     </a>
                   </div>
-                  <p className="text-sm text-gray-500 mt-2">
-                    {telegramContact && telegramContact.telegram
-                      ? `Для быстрой связи напишите ${telegramContact.name} в Telegram`
-                      : "Доступны в Telegram, ВКонтакте и WhatsApp"}
-                  </p>
                 </div>
               </div>
 
@@ -234,7 +262,7 @@ export default function Contacts() {
             </h3>
             <p className="text-gray-600 mb-6">
               Заполните форму, и мы свяжемся с вами для уточнения деталей
-              заказа.
+              заказа. Ваша заявка будет отправлена в наш Telegram.
             </p>
 
             {showSuccess && (
