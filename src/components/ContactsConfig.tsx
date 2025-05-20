@@ -3,6 +3,7 @@ import React, { createContext, useContext, useState } from "react";
 interface Contact {
   name: string;
   phone: string;
+  telegram?: string;
 }
 
 interface ContactsConfigContextType {
@@ -12,8 +13,9 @@ interface ContactsConfigContextType {
   removeContact: (index: number) => void;
 }
 
-// Задаем контакты по умолчанию с номерами, указанными пользователем
+// Обновляем контакты по умолчанию, добавляем Юрия с Telegram
 const defaultContacts: Contact[] = [
+  { name: "Юрий", phone: "-", telegram: "https://t.me/molohka" },
   { name: "Михаил", phone: "89534187290" },
   { name: "Елена", phone: "89004856158" },
 ];
