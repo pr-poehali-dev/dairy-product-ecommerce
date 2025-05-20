@@ -1,57 +1,86 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import Icon from "@/components/ui/icon";
-import { useOrder } from "./OrderContext";
-import { useToast } from "@/hooks/use-toast";
 import { useEmailConfig } from "./EmailConfig";
+import { useContactsConfig } from "./ContactsConfig";
 
-const Contacts: React.FC = () => {
-  const { setOrderFormOpen, setSelectedProduct } = useOrder();
-  const { toast } = useToast();
+export default function Contacts() {
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [message, setMessage] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
   const { email } = useEmailConfig();
+  const { contacts } = useContactsConfig();
 
-  const handleContactFormSubmit = (e: React.FormEvent) => {
+  // Формируем список контактов для отображения в сообщении
+  const contactsInfo = contacts
+    .map((contact) => `${contact.name}: ${contact.phone}`)
+    .join(", ");
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Настраиваем FormSubmit
-    const formElement = e.target as HTMLFormElement;
-    formElement.action = `https://formsubmit.co/${email}`;
-    formElement.method = "POST";
+    if (!name || !phone || !message) {
+      alert("Пожалуйста, заполните все поля!");
+      return;
+    }
 
-    // Получаем данные из формы
-    const formData = new FormData(formElement);
-    const name = formData.get("name") as string;
-    const phone = formData.get("phone") as string;
-    const order = formData.get("order") as string;
+    setIsSubmitting(true);
 
-    // Добавим скрытые поля для FormSubmit
-    const hiddenFields = [
-      { name: "_subject", value: "Новая заявка с сайта" },
-      { name: "_template", value: "table" }, // Хорошее форматирование письма
-      { name: "_captcha", value: "false" }, // Отключаем капчу
-      { name: "_next", value: window.location.href }, // Редирект на текущую страницу после отправки
-    ];
+    // Создаем данные для формы
+    const formData = {
+      name,
+      phone,
+      message,
+      _subject: `Сообщение с сайта от ${name}`,
+      _captcha: "false",
+      _template: "table",
+      _replyto: email, // Для ответа
+    };
 
-    hiddenFields.forEach((field) => {
-      const input = document.createElement("input");
-      input.type = "hidden";
-      input.name = field.name;
-      input.value = field.value;
-      formElement.appendChild(input);
-    });
+    try {
+      // Используем formsubmit.co для отправки формы на email
+      const response = await fetch(`https://formsubmit.co/ajax/${email}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          ...formData,
+          message: `
+          <h2>Новое сообщение с сайта!</h2>
+          <p><strong>Имя:</strong> ${name}</p>
+          <p><strong>Телефон:</strong> ${phone}</p>
+          <p><strong>Сообщение:</strong> ${message}</p>
+          <p><strong>Контактные лица:</strong> ${contactsInfo}</p>
+          `,
+        }),
+      });
 
-    // Выводим уведомление о принятии заказа
-    toast({
-      title: "Заявка принята!",
-      description:
-        "Мы свяжемся с вами в ближайшее время для подтверждения заказа.",
-      duration: 5000,
-    });
+      if (response.ok) {
+        // Успешная отправка
+        setShowSuccess(true);
+        setTimeout(() => setShowSuccess(false), 5000);
 
-    // Отправляем форму
-    formElement.submit();
-
-    console.log("Отправка заявки из формы контактов:", { name, phone, order });
+        // Очищаем форму
+        setName("");
+        setPhone("");
+        setMessage("");
+      } else {
+        alert(
+          "Произошла ошибка при отправке формы. Пожалуйста, попробуйте позже.",
+        );
+      }
+    } catch (error) {
+      console.error("Ошибка отправки формы:", error);
+      alert(
+        "Произошла ошибка при отправке формы. Пожалуйста, попробуйте позже.",
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -162,7 +191,7 @@ const Contacts: React.FC = () => {
             </p>
 
             <div className="space-y-4">
-              <form onSubmit={handleContactFormSubmit}>
+              <form onSubmit={handleSubmit}>
                 <input
                   type="text"
                   name="name"
@@ -204,6 +233,4 @@ const Contacts: React.FC = () => {
       </div>
     </section>
   );
-};
-
-export default Contacts;
+}

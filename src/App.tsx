@@ -1,26 +1,27 @@
-
-import { useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { Toaster } from "@/components/ui/toaster";
-import Index from "@/pages/Index";
-import NotFound from "@/pages/NotFound";
-import { OrderProvider } from "@/components/OrderContext";
-import { EmailConfigProvider } from "@/components/EmailConfig";
+import { WhatsAppConfigProvider } from "./components/WhatsAppConfig";
+import { EmailConfigProvider } from "./components/EmailConfig";
+import { ContactsConfigProvider } from "./components/ContactsConfig";
+import Index from "./pages/Index";
+import NotFound from "./pages/NotFound";
+import Settings from "./pages/Settings";
 import "./App.css";
 
 function App() {
   return (
-    <EmailConfigProvider>
-      <OrderProvider>
-        <Router>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </Router>
-        <Toaster />
-      </OrderProvider>
-    </EmailConfigProvider>
+    <Router>
+      <WhatsAppConfigProvider>
+        <EmailConfigProvider>
+          <ContactsConfigProvider>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/settings" element={<Settings />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </ContactsConfigProvider>
+        </EmailConfigProvider>
+      </WhatsAppConfigProvider>
+    </Router>
   );
 }
 
