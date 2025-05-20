@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState } from "react";
 
 interface Contact {
@@ -13,15 +12,19 @@ interface ContactsConfigContextType {
   removeContact: (index: number) => void;
 }
 
-// Задаем контакты по умолчанию
+// Задаем контакты по умолчанию с номерами, указанными пользователем
 const defaultContacts: Contact[] = [
   { name: "Михаил", phone: "89534187290" },
-  { name: "Елена", phone: "89004856158" }
+  { name: "Елена", phone: "89004856158" },
 ];
 
-const ContactsConfigContext = createContext<ContactsConfigContextType | undefined>(undefined);
+const ContactsConfigContext = createContext<
+  ContactsConfigContextType | undefined
+>(undefined);
 
-export const ContactsConfigProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const ContactsConfigProvider: React.FC<{
+  children: React.ReactNode;
+}> = ({ children }) => {
   const [contacts, setContacts] = useState<Contact[]>(() => {
     // Пробуем загрузить контакты из localStorage, если они там есть
     const savedContacts = localStorage.getItem("contacts");
@@ -51,7 +54,7 @@ export const ContactsConfigProvider: React.FC<{ children: React.ReactNode }> = (
         contacts,
         setContacts: updateContacts,
         addContact,
-        removeContact
+        removeContact,
       }}
     >
       {children}
@@ -62,7 +65,9 @@ export const ContactsConfigProvider: React.FC<{ children: React.ReactNode }> = (
 export const useContactsConfig = () => {
   const context = useContext(ContactsConfigContext);
   if (context === undefined) {
-    throw new Error("useContactsConfig must be used within a ContactsConfigProvider");
+    throw new Error(
+      "useContactsConfig must be used within a ContactsConfigProvider",
+    );
   }
   return context;
 };

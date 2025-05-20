@@ -1,4 +1,3 @@
-
 /**
  * Утилиты для работы с WhatsApp
  */
@@ -7,7 +6,7 @@
  * Форматирует телефонный номер для WhatsApp (удаляет все, кроме цифр)
  */
 export const formatPhoneNumber = (phone: string): string => {
-  return phone.replace(/\D/g, '');
+  return phone.replace(/\D/g, "");
 };
 
 /**
@@ -25,20 +24,24 @@ export const createWhatsAppLink = (phone: string, message: string): string => {
  */
 export const openWhatsApp = (phone: string, message: string): void => {
   const link = createWhatsAppLink(phone, message);
-  window.open(link, '_blank');
+  window.open(link, "_blank");
 };
 
 /**
  * Форматирует данные заказа для отправки в WhatsApp
  */
-export const formatOrderMessage = (orderData: Record<string, string>): string => {
-  const {name, phone, address, product, comment} = orderData;
-  
-  return `🥛 *Новый заказ на сайте!* 🥛\n\n` +
+export const formatOrderMessage = (
+  orderData: Record<string, string>,
+): string => {
+  const { name, phone, address, product, comment } = orderData;
+
+  return (
+    `🥛 *Новый заказ на сайте!* 🥛\n\n` +
     `*Имя*: ${name}\n` +
     `*Телефон*: ${phone}\n` +
-    `*Адрес*: ${address || '-'}\n` +
-    `*Продукт*: ${product || '-'}\n` +
-    `*Комментарий*: ${comment || '-'}\n\n` +
-    `Пожалуйста, обработайте заказ как можно скорее.`;
+    `*Адрес*: ${address || "-"}\n` +
+    `*Продукт*: ${product || "-"}\n` +
+    `*Комментарий*: ${comment || "-"}\n\n` +
+    `Пожалуйста, обработайте заказ как можно скорее.`
+  );
 };
