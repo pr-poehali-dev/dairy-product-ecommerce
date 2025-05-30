@@ -5,6 +5,8 @@ import { useWhatsAppConfig } from "./WhatsAppConfig";
 import { useContactsConfig } from "./ContactsConfig";
 import { useEmailConfig } from "./EmailConfig";
 import { formatOrderMessage, openWhatsApp } from "@/lib/whatsapp";
+import { formatTelegramOrder, sendTelegramMessage } from "@/lib/telegram";
+import { useTelegramBotConfig } from "./TelegramBotConfig";
 import { toast } from "@/hooks/use-toast";
 
 // Константа для Telegram-ссылки
@@ -21,6 +23,7 @@ export default function Contacts() {
   const { contacts } = useContactsConfig();
   const { whatsappNumber } = useWhatsAppConfig();
   const { email } = useEmailConfig();
+  const { config: telegramConfig } = useTelegramBotConfig();
 
   // Функция для открытия Telegram
   const openTelegram = () => {
@@ -38,7 +41,7 @@ export default function Contacts() {
     setIsSubmitting(true);
 
     try {
-      // Формируем данные для отправки
+      // Формируем данные заявки
       const orderData = {
         name,
         phone,
@@ -47,7 +50,34 @@ export default function Contacts() {
         comment: message,
       };
 
-      // Формируем сообщение
+      // Отправляем через Telegram бота, если настроен
+      if (
+        telegramConfig.isEnabled &&
+        telegramConfig.botToken &&
+        telegramConfig.chatId
+      ) {
+        const telegramMessage = formatTelegramOrder(orderData);
+        const telegramSent = await sendTelegramMessage(telegramMessage);
+
+        if (telegramSent) {
+          toast({
+            title: "Заявка отправлена!",
+            description:
+              "Ваше сообщение успешно доставлено через Telegram бота",
+            duration: 5000,
+          });
+
+          // Очищаем форму
+          setName("");
+          setPhone("");
+          setMessage("");
+          setShowSuccess(true);
+          setIsSubmitting(false);
+          return;
+        }
+      }
+
+      // Fallback: используем старый метод с email и открытием Telegram
       const orderMessage = formatOrderMessage(orderData);
 
       // Создаем данные для email формы
